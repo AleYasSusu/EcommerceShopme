@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.shopme.admin.Repository.UserRepository;
-import com.shopme.admin.security.ShopmeUserDetail;
+import com.shopme.admin.security.ShopmeUserDetails;
 import com.shopme.common.entity.User;
 
 public class ShopmeUserDetailsService implements UserDetailsService {
@@ -20,7 +20,7 @@ public class ShopmeUserDetailsService implements UserDetailsService {
 	User userByEmail = userRepository.getUserByEmail(email);
 	
 	if (userByEmail != null) {
-		return new ShopmeUserDetail(userByEmail);
+		return new ShopmeUserDetails(userByEmail);
 	}
 	
 		throw new UsernameNotFoundException("Could not find user with email:" + email);

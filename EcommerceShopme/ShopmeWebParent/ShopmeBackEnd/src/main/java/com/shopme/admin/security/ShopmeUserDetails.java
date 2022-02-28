@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
-public class ShopmeUserDetail implements UserDetails {
+public class ShopmeUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public class ShopmeUserDetail implements UserDetails {
 	private User user;
 	
 	
-	public ShopmeUserDetail(User user) {
+	public ShopmeUserDetails(User user) {
 		super();
 		this.user = user;
 	}
@@ -72,6 +72,14 @@ public class ShopmeUserDetail implements UserDetails {
 	
 	public String getFullName() {
 		return this.user.getFirstName() + " " + this.user.getLastName();
+	}
+
+	public void setFirstName(String firstName) {
+		this.user.setFirstName(firstName);
+	}
+
+	public void setLastName(String lastName) {
+		this.user.setLastName(lastName);
 	}
 	
 }
