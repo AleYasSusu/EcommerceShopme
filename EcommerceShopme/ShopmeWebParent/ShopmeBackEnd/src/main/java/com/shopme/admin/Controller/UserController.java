@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopme.admin.FileUploadUtil;
-import com.shopme.admin.config.UserCsvExporter;
+import com.shopme.admin.exports.UserCsvExporter;
+import com.shopme.admin.exports.UserExcelExporter;
+import com.shopme.admin.exports.UserPdfExporter;
 import com.shopme.admin.service.UserService;
 import com.shopme.admin.service.exception.UserNotFoundException;
 import com.shopme.common.entity.Role;
@@ -158,4 +160,19 @@ public class UserController {
 		exporter.export(listUsers, response);
 	}
 
+	@GetMapping("/users/export/excel")
+	public void exportToExcel(HttpServletResponse response) throws IOException {
+		List<User> listUsers = service.listAll();
+		
+		UserExcelExporter exporter = new UserExcelExporter();
+		exporter.export(listUsers, response);
+	}
+	
+	@GetMapping("/users/export/pdf")
+	public void exportToPDF(HttpServletResponse response) throws IOException {
+		List<User> listUsers = service.listAll();
+		
+		UserPdfExporter exporter = new UserPdfExporter();
+		exporter.export(listUsers, response);
+	}
 }
