@@ -31,7 +31,7 @@ public class AccountController {
 		User user = service.getByEmail(email);
 		model.addAttribute("user", user);
 		
-		return "account_form";
+		return "users/account_form";
 		
 	}
 	
@@ -45,7 +45,7 @@ public class AccountController {
 			user.setPhotos(fileName);
 			User savedUser = service.updateAccount(user);
 			
-			String uploadDir = "userPhotos/" + savedUser.getId();
+			String uploadDir = "user-photos/" + savedUser.getId();
 			
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
@@ -63,4 +63,3 @@ public class AccountController {
 		return "redirect:/account";
 	}	
 }
-

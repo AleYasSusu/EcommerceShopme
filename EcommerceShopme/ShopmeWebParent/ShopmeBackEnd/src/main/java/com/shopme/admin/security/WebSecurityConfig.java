@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -18,23 +19,25 @@ import com.shopme.admin.service.ShopmeUserDetailsService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
-	public ShopmeUserDetailsService userDetailsService() {
+	public UserDetailsService userDetailsService() {
 		return new ShopmeUserDetailsService();
 	}
-
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
+	
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());
 		authProvider.setPasswordEncoder(passwordEncoder());
-
+		
 		return authProvider;
 	}
-
+	
+	
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider());
@@ -43,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+			.antMatchers("/users/**").hasAuthority("Admin")
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()			
@@ -54,15 +58,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.rememberMe()
 					.key("AbcDefgHijKlmnOpqrs_1234567890")
 					.tokenValiditySeconds(7 * 24 * 60 * 60);
-					
+					;
 			
 	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-
 		web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
-
 	}
 
 }
