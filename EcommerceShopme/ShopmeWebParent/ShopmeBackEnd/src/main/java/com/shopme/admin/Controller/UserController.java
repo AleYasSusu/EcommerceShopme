@@ -44,8 +44,7 @@ public class UserController {
 			@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 			@Param("keyword") String keyword
 			) {
-		System.out.println("Sort Field: " + sortField);
-		System.out.println("Sort Order: " + sortDir);
+		
 		
 		Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
 		
@@ -97,7 +96,7 @@ public class UserController {
 			user.setPhotos(fileName);
 			User savedUser = service.save(user);
 			
-			String uploadDir = "user-photos/" + savedUser.getId();
+			String uploadDir = "userPhotos/" + savedUser.getId();
 			
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
