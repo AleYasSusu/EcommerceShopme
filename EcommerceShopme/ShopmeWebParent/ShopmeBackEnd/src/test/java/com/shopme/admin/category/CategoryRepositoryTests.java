@@ -32,7 +32,7 @@ public class CategoryRepositoryTests {
 	
 	@Test
 	public void testCreateSubCategory() {
-		Category parent = new Category(2);
+		Category parent = new Category();
 		Category subCategory = new Category("Eletronics", parent);
 		Category savedCategory = repo.save(subCategory);
 		
@@ -41,7 +41,7 @@ public class CategoryRepositoryTests {
 	
 	@Test
 	public void testGetCategory() {
-		Category category = repo.findById(2).get();
+		Category category = repo.findById(1).get();
 		System.out.println(category.getName());
 		
 		Set<Category> children = category.getChildren();
