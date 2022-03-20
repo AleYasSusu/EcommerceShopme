@@ -2,6 +2,7 @@ package com.shopme.admin.category;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,8 @@ public class CategoryRepositoryTests {
 	
 	@Test
 	public void testCreateSubCategory() {
-		Category parent = new Category();
-		Category subCategory = new Category("Eletronics", parent);
+		Category parent = new Category(7);
+		Category subCategory = new Category("iPhone", parent);
 		Category savedCategory = repo.save(subCategory);
 		
 		assertThat(savedCategory.getId()).isGreaterThan(0);
@@ -41,7 +42,7 @@ public class CategoryRepositoryTests {
 	
 	@Test
 	public void testGetCategory() {
-		Category category = repo.findById(1).get();
+		Category category = repo.findById(2).get();
 		System.out.println(category.getName());
 		
 		Set<Category> children = category.getChildren();
@@ -84,5 +85,30 @@ public class CategoryRepositoryTests {
 			
 			printChildren(subCategory, newSubLevel);
 		}		
+	}
+	
+	@Test
+	public void testListRootCategories() {
+		List<Category> rootCategories = repo.findRootCategories();
+		rootCategories.forEach(cat -> System.out.println(cat.getName()));
+	}
+	
+	@Test
+	public void testFindByName() {
+		String name = "Computers";
+		Category category = repo.findByName(name);
+		
+		assertThat(category).isNotNull();
+		assertThat(category.getName()).isEqualTo(name);
+	}
+	
+	
+	@Test
+	public void testFindByAlias() {
+		String alias = "electronics";
+		Category category = repo.findByAlias(alias);
+		
+		assertThat(category).isNotNull();
+		assertThat(category.getAlias()).isEqualTo(alias);
 	}
 }

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "categories")
@@ -45,6 +46,40 @@ public class Category {
 		this.id = id;
 	}
 
+	public static Category copyIdAndName(Category category) {
+		Category copyCategory = new Category();
+		copyCategory.setId(category.getId());
+		copyCategory.setName(category.getName());
+		
+		return copyCategory;
+	}
+
+	public static Category copyIdAndName(Integer id, String name) {
+		Category copyCategory = new Category();
+		copyCategory.setId(id);
+		copyCategory.setName(name);
+		
+		return copyCategory;
+	}
+	
+	public static Category copyFull(Category category) {
+		Category copyCategory = new Category();
+		copyCategory.setId(category.getId());
+		copyCategory.setName(category.getName());
+		copyCategory.setImage(category.getImage());
+		copyCategory.setAlias(category.getAlias());
+		copyCategory.setEnabled(category.isEnabled());
+		
+		return copyCategory;		
+	}
+	
+	public static Category copyFull(Category category, String name) {
+		Category copyCategory = Category.copyFull(category);
+		copyCategory.setName(name);
+		
+		return copyCategory;
+	}
+	
 	public Category(String name) {
 		this.name = name;
 		this.alias = name;
@@ -55,6 +90,13 @@ public class Category {
 		this(name);
 		this.parent = parent;
 	}	
+
+	public Category(Integer id, String name, String alias) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.alias = alias;
+	}
 
 	public Integer getId() {
 		return id;
@@ -112,5 +154,10 @@ public class Category {
 		this.children = children;
 	}
 	
-	
+	@Transient
+	public String getImagePath() {
+		if (this.id == null) return "/images/image-thumbnail.png";
+		
+		return "/category-images/" + this.id + "/" + this.image;
+	}
 }

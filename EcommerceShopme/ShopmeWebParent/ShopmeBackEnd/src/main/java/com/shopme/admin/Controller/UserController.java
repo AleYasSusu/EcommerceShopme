@@ -102,7 +102,8 @@ public class UserController {
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			
 		} else {
-			if (user.getPhotos().isEmpty()) user.setPhotos(null);
+			if (user.getPhotos().isEmpty())
+			user.setPhotos(null);
 			service.save(user);
 		}
 		
@@ -126,7 +127,7 @@ public class UserController {
 			List<Role> listRoles = service.listRoles();
 			
 			model.addAttribute("user", user);
-			model.addAttribute("pageTitle", "Edit User (ID: " + id + ")");
+			model.addAttribute("pageTitle", "Edit User (ID: " + id + ")"); 
 			model.addAttribute("listRoles", listRoles);
 			
 			return "users/user_form";
