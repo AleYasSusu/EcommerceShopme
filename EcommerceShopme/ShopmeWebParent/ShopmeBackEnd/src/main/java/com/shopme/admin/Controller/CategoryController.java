@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -20,10 +21,7 @@ import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.exports.CategoriesExcelExporter;
 import com.shopme.admin.service.CategoryService;
 import com.shopme.admin.service.exception.CategoryNotFoundException;
-import com.shopme.admin.service.exception.UserNotFoundException;
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.Role;
-import com.shopme.common.entity.User;
 
 @Controller
 public class CategoryController {
@@ -31,8 +29,10 @@ public class CategoryController {
 	private CategoryService service;
 	
 	@GetMapping("/categories")
-	public String listAll(Model model) {
-		List<Category> listCategories = service.listAll();
+	public String listAll(@Param("sortDir") String sortDir, Model model) {
+		
+		
+		List<Category> listCategories = service.listAll(sortDir);
 		model.addAttribute("listCategories", listCategories);
 		
 		return "categories/categories";
@@ -72,20 +72,25 @@ public class CategoryController {
 	
 	@GetMapping("/categories/edit/{id}")
 	public String editCategory(@PathVariable(name = "id") Integer id, Model model,
-			RedirectAttributes ra) throws CategoryNotFoundException, CategoryNotFoundException, UserNotFoundException {
-		Category category = service.get(id);
-		List<Category> listCategories = service.listCategoriesUsedInForm();
-		
-		model.addAttribute("category", category);
-		model.addAttribute("listCategories", listCategories);
-		model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")");
-		
-		return "categories/category_form";
+			RedirectAttributes ra) {
+		try {
+			Category category = service.get(id);
+			List<Category> listCategories = service.listCategoriesUsedInForm();
+			
+			model.addAttribute("category", category);
+			model.addAttribute("listCategories", listCategories);
+			model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")");
+			
+			return "categories/category_form";			
+		} catch (CategoryNotFoundException ex) {
+			ra.addFlashAttribute("message", ex.getMessage());
+			return "redirect:/categories";
+		}
 	}
 	
 	@GetMapping("/categories/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		List<Category> listCategories = service.listAll();
+		List<Category> listCategories = service.listAll(null);
 		
 		CategoriesExcelExporter exporter = new CategoriesExcelExporter();
 		exporter.export(listCategories, response);
@@ -106,5 +111,5 @@ public class CategoryController {
 		return "redirect:/categories";
 	}**/
 	
-	
 }
+	
